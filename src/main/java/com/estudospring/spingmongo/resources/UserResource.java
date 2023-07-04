@@ -5,11 +5,10 @@ import com.estudospring.spingmongo.dto.UserDTO;
 import com.estudospring.spingmongo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,4 +32,11 @@ public class UserResource {
         User user = userService.findById(id);
         return ResponseEntity.ok().body(new UserDTO(user));
     }
+    @RequestMapping (method = RequestMethod.POST)
+    public ResponseEntity<UserDTO> insertUser(@RequestBody UserDTO obj){
+        var user = userService.insert(userService.fromDTO(obj));
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
+        return ResponseEntity.created(uri).body(new UserDTO(user));
+    }
+
 }

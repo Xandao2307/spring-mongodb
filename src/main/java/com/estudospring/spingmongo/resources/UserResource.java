@@ -43,4 +43,14 @@ public class UserResource {
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @RequestMapping (value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO obj, @PathVariable String id){
+        var user = userService.fromDTO(obj);
+        user.setId(id);
+        user = userService.update(user);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
+        return ResponseEntity.ok().body(new UserDTO(user));
+    }
 }

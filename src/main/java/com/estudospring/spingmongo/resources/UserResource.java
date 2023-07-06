@@ -1,5 +1,6 @@
 package com.estudospring.spingmongo.resources;
 
+import com.estudospring.spingmongo.domain.Post;
 import com.estudospring.spingmongo.domain.User;
 import com.estudospring.spingmongo.dto.UserDTO;
 import com.estudospring.spingmongo.service.UserService;
@@ -52,5 +53,10 @@ public class UserResource {
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
         return ResponseEntity.ok().body(new UserDTO(user));
+    }
+    @RequestMapping(value = "/{id}/posts", method = RequestMethod.GET)
+    public ResponseEntity<List<Post>> findPosts(@PathVariable String id){
+        User user = userService.findById(id);
+        return ResponseEntity.ok().body(user.getPosts());
     }
 }
